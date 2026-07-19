@@ -150,7 +150,7 @@ function buildReceipt(ticket = {}, paperSize = 80) {
     const lineTotal = qty * unit;
     computedSubtotal += lineTotal;
     t.line(`${qty}x ${it.name || ''}`);
-    t.twoCol(`   @ ${money(unit)}`, money(lineTotal));
+    t.twoCol(`   c/u ${money(unit)}`, money(lineTotal));
   }
   t.separator();
 
