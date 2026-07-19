@@ -1,0 +1,51 @@
+{
+  "name": "imperio-print",
+  "version": "1.0.0",
+  "main": "main.js",
+  "description": "Puente entre Imperio web y las impresoras termicas de la barberia",
+  "author": "Imperio",
+  "license": "MIT",
+  "scripts": {
+    "start": "set IMPERIO_DEV=1&& electron .",
+    "build": "electron-builder --win",
+    "make-icon": "node scripts/make-icon.js"
+  },
+  "build": {
+    "appId": "com.imperio.print",
+    "productName": "Imperio Print",
+    "artifactName": "Imperio-Print-Setup-${version}.${ext}",
+    "files": [
+      "main.js",
+      "preload.js",
+      "ui/**/*",
+      "src/**/*",
+      "assets/**/*"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": true,
+      "allowToChangeInstallationDirectory": false,
+      "createDesktopShortcut": true,
+      "runAfterFinish": true
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "MisaelIvanYamJimenez",
+      "repo": "imperio-print"
+    }
+  },
+  "dependencies": {
+    "auto-launch": "^5.0.6",
+    "electron-store": "^8.2.0",
+    "electron-updater": "^6.3.9",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "electron": "^31.7.6",
+    "electron-builder": "^24.13.3",
+    "png-to-ico": "^2.1.8"
+  }
+}

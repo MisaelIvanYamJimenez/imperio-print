@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'none'; script-src 'self'; style-src 'unsafe-inline'; img-src 'self' data:;" />
+  <title>Imperio Print</title>
+  <style>
+    :root {
+      --bg: #0f1622;
+      --panel: #182333;
+      --panel-2: #1f2c40;
+      --border: #2b3a52;
+      --text: #e8edf4;
+      --muted: #93a1b5;
+      --gold: #e0b64c;
+      --gold-dark: #c99f36;
+      --green: #3ecf8e;
+      --red: #ef5f6b;
+      --radius: 10px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      display: flex; flex-direction: column;
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+    }
+    header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 18px 20px;
+      background: linear-gradient(180deg, #182333, #131c29);
+      border-bottom: 1px solid var(--border);
+    }
+    header .logo {
+      width: 34px; height: 34px; border-radius: 8px;
+      background: var(--gold); color: #1a1206;
+      display: grid; place-items: center; font-weight: 800; font-size: 20px;
+    }
+    header h1 { font-size: 16px; margin: 0; font-weight: 700; }
+    header .sub { color: var(--muted); font-size: 12px; }
+    main { padding: 16px 20px 8px; flex: 1; }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+    .card h2 {
+      font-size: 12px; letter-spacing: .06em; text-transform: uppercase;
+      color: var(--muted); margin: 0 0 12px;
+    }
+    .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .row + .row { margin-top: 10px; }
+    label { display: block; color: var(--muted); font-size: 12px; margin-bottom: 6px; }
+    input {
+      width: 100%; padding: 9px 10px;
+      background: var(--panel-2); color: var(--text);
+      border: 1px solid var(--border); border-radius: 8px; font-size: 14px;
+      outline: none;
+    }
+    input:focus { border-color: var(--gold); }
+    .field { margin-bottom: 12px; }
+    button {
+      border: 0; border-radius: 8px; padding: 9px 14px;
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      background: var(--panel-2); color: var(--text); border: 1px solid var(--border);
+    }
+    button:hover { border-color: var(--gold); }
+    button.primary { background: var(--gold); color: #1a1206; border-color: var(--gold-dark); }
+    button.primary:hover { background: var(--gold-dark); }
+    button.ghost { background: transparent; }
+    button:disabled { opacity: .5; cursor: not-allowed; }
+    .btns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .status-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; margin-right: 7px; }
+    .dot-on { background: var(--green); box-shadow: 0 0 8px var(--green); }
+    .dot-off { background: var(--red); }
+    .muted { color: var(--muted); }
+    .pill { font-size: 12px; color: var(--muted); background: var(--panel-2); padding: 3px 9px; border-radius: 999px; border: 1px solid var(--border); }
+    .value { font-size: 15px; font-weight: 600; }
+    .value.big { font-size: 17px; }
+    .hint { color: var(--muted); font-size: 12px; margin-top: 6px; }
+    .assigned-box { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    footer {
+      padding: 12px 20px; border-top: 1px solid var(--border);
+      color: var(--muted); font-size: 12px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    #banner {
+      display: none; align-items: center; justify-content: space-between; gap: 10px;
+      background: #23324a; border: 1px solid var(--gold-dark);
+      padding: 10px 14px; border-radius: 8px; margin-bottom: 14px;
+    }
+    #banner.show { display: flex; }
+    #toast {
+      position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+      background: var(--panel-2); border: 1px solid var(--border);
+      padding: 10px 16px; border-radius: 8px; font-size: 13px;
+      opacity: 0; transition: opacity .2s; pointer-events: none; max-width: 90%;
+    }
+    #toast.show { opacity: 1; }
+    #toast.ok { border-color: var(--green); }
+    #toast.err { border-color: var(--red); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">I</div>
+    <div>
+      <h1>Imperio Print</h1>
+      <div class="sub">Puente de impresion</div>
+    </div>
+  </header>
+
+  <main>
+    <div id="banner">
+      <span id="banner-text">Hay una actualizacion disponible.</span>
+      <span>
+        <button id="btn-download" class="primary">Descargar</button>
+        <button id="btn-install" class="primary" style="display:none">Actualizar</button>
+      </span>
+    </div>
+
+    <div class="card">
+      <h2>Estado del servidor</h2>
+      <div class="row">
+        <span><span class="status-dot dot-off" id="dot"></span><span id="status-text">Verificando...</span></span>
+        <span class="pill" id="port-pill">puerto —</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Token de la sucursal</h2>
+      <div class="field">
+        <label>Debe coincidir con el token configurado en el panel web.</label>
+        <input id="token" type="text" placeholder="Pega aqui el token de la sucursal" autocomplete="off" spellcheck="false" />
+      </div>
+      <div class="btns">
+        <button id="btn-save-token" class="primary">Guardar token</button>
+        <button id="btn-disconnect" class="ghost">Desconectar</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Impresora asignada</h2>
+      <div class="assigned-box">
+        <div>
+          <div class="value big" id="assigned-name">Sin asignar</div>
+          <div class="hint" id="assigned-hint">Las impresoras se configuran desde el panel web.</div>
+        </div>
+        <span class="pill" id="assigned-paper" style="display:none"></span>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <span id="version">Imperio Print v—</span>
+    <span class="muted">Solo lectura</span>
+  </footer>
+
+  <div id="toast"></div>
+  <script src="renderer.js"></script>
+</body>
+</html>
