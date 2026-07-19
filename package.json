@@ -1,6 +1,6 @@
 {
   "name": "imperio-print",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "main.js",
   "description": "Puente entre Imperio web y las impresoras termicas de la barberia",
   "author": "Imperio",
